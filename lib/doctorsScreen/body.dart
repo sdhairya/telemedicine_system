@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:telemedicine_system/colors.dart';
 import 'package:telemedicine_system/consultationFormatScreen/consultationFormatScreen.dart';
+import 'package:telemedicine_system/doctorProfile/doctorProfile.dart';
 
 import '../apis/api.dart';
 import '../bookSlotScreen/bookSlotScreen.dart';
@@ -167,7 +168,9 @@ class _bodyState extends State<body> {
                                                           FontWeight.normal,
                                                           Colors.blue,
                                                           16),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => doctorProfie(profile: widget.data[0][index]),));
+                                                      },
                                                     )
                                                   ],
                                                 ),
@@ -266,7 +269,9 @@ class _bodyState extends State<body> {
                                                           FontWeight.normal,
                                                           Colors.blue,
                                                           16),
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => doctorProfie(profile: widget.data[1][index]),));
+                                                      },
                                                     )
                                                   ],
                                                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telemedicine_system/dataClass/dataClass.dart';
 import 'package:telemedicine_system/loginScreen/loginScreen.dart';
 
 import '../components.dart';
@@ -199,10 +200,11 @@ class _body1State extends State<body1> {
                                           print(gender);
                                           validate()
                                               ?
-                                          Navigator.of(context).pushReplacement(
+                                          Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      body2(data: [_nameController.text, _emailController.text, gender.toString()],)))
+                                                      body2(data: createProfile(name: _nameController.text, email: _emailController.text, gender: gender.toString(), password: "password", dob: "dob", phone: "phone")
+                                                        ,)))
                                               : Null;
                                         },
                                       ),

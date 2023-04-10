@@ -8,7 +8,6 @@ import '../consultationModeScreen/consultationFormatScreen.dart';
 class body extends StatefulWidget {
 
   final List<String> categories;
-
   const body({Key? key, required this.categories}) : super(key: key);
 
   @override
@@ -148,7 +147,7 @@ class _bodyState extends State<body> {
       onTap: () {
         print(data);
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => consultationModeScreen(category: data, data: doctorProfile(id:"id", name: "name",phone: "", degree: "degree", facility: "facility", experience: "experience", image: "image", speciality: '', mode: "", fees: "", otherachivement: "", description: "")),));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => consultationModeScreen(category: data, data: doctorProfile(id:"id", name: "name",phone: "", degree: "degree", facility: "facility", experience: "experience", image: "image", speciality: '', fees: "", otherachivement: "", description: "")),));
       },
     );
   }

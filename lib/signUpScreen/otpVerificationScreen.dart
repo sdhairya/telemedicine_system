@@ -1,17 +1,62 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:telemedicine_system/colors.dart';
+import 'package:telemedicine_system/dataClass/dataClass.dart';
+import 'package:telemedicine_system/loginScreen/loginScreen.dart';
 
+import '../apis/api.dart';
 import '../components.dart';
+import '../dashboardScreen/dashboardScreen.dart';
 
 class otpVerificationScreen extends StatefulWidget {
-  const otpVerificationScreen({Key? key}) : super(key: key);
+
+  final createProfile data;
+  const otpVerificationScreen({Key? key, required this.data}) : super(key: key);
 
   @override
   State<otpVerificationScreen> createState() => _otpVerificationScreenState();
 }
 
 class _otpVerificationScreenState extends State<otpVerificationScreen> {
+
+  OtpFieldController otp = OtpFieldController();
+  String value = "";
+  bool timerStart = false;
+  bool reSend = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    timerStart = true;
+    startTimer();
+  }
+
+  late Timer _timer;
+  Duration myDuration = Duration(seconds: 30);
+  void startTimer() {
+    _timer =
+        Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  void setCountDown() {
+    final reduceSecondsBy = 1;
+    setState(() {
+      final seconds = myDuration.inSeconds - reduceSecondsBy;
+      if (seconds < 0) {
+        _timer.cancel();
+        setState(() {
+          reSend = true;
+        });
+      } else {
+        myDuration = Duration(seconds: seconds);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,16 +82,7 @@ class _otpVerificationScreenState extends State<otpVerificationScreen> {
 
                                 Padding(
                                   padding: EdgeInsets.only(top: 30,left: 15),
-                                  child: ElevatedButton(
-                                    child: Icon(Icons.arrow_back_ios_new, size: 30, color: Color(0xff383434)),
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xfff6f6f4),
-                                        shape: CircleBorder(),
-                                        padding: EdgeInsets.all(10)
-                                    ),
-                                    onPressed: () {
-                                    },
-                                  ),
+                                  child: components().backButton(context)
                                 )
                                 ,
                                 Align(
@@ -73,6 +109,7 @@ class _otpVerificationScreenState extends State<otpVerificationScreen> {
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: OTPTextField(
                                 length: 4,
+                                controller: otp,
                                 width: MediaQuery.of(context).size.width,
                                 textFieldAlignment: MainAxisAlignment.spaceAround,
                                 fieldWidth: 40,
@@ -82,10 +119,30 @@ class _otpVerificationScreenState extends State<otpVerificationScreen> {
                                   print("Changed: " + pin);
                                 },
                                 onCompleted: (pin) {
+                                  setState(() {
+                                    value = pin;
+                                  });
                                   print("Completed: " + pin);
                                 }),
-                          )
-                          ,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  child: components().text("Resend OTP", FontWeight.w500, reSend ? colors().logo_darkBlue : Colors.grey, 18),
+                                  onTap: () async {
+                                    await api().sendOtp(widget.data.phone);
+                                  },
+                                ),
+                                components().text("Seconds "+myDuration.inSeconds.remainder(60).toString(), FontWeight.w400 , Colors.grey, 18)
+                              ],
+                            ),
+                          ),
                           SizedBox(
                             height: 30,
                           ),
@@ -101,12 +158,21 @@ class _otpVerificationScreenState extends State<otpVerificationScreen> {
                                       55, 10, 55, 10)),
                               child: components().text("Verify Otp",
                                   FontWeight.w500, Colors.white, 22),
-                              onPressed: () {
+                              onPressed: () async {
+                                print(value);
+                                var result = await api().addUser(value, widget.data);
 
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            otpVerificationScreen()));
+                                if(result == "otp is invalid"){
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Please enter valid OTP", FontWeight.w500, Colors.white, 18),));
+                                }
+                                else{
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => loginScreen()));
+                                }
+
+                                // Navigator.of(context).pushReplacement(
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             otpVerificationScreen()));
                               },
                             ),
                           )

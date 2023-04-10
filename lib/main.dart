@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'loginScreen/loginScreen.dart';
 
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -37,6 +39,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {

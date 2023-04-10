@@ -9,6 +9,6 @@ class consultationFormatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return body(data: data,);
+    return body(data: data);
   }
 }

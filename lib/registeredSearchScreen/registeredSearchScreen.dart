@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../apis/api.dart';
+import '../dataClass/dataClass.dart';
 import 'body.dart';
 
 class registeredSearchScreen extends StatelessWidget {
+
   const registeredSearchScreen({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class registeredSearchScreen extends StatelessWidget {
       builder: (context, snapshot) {
         // print(snapshot.data);
         if(snapshot.hasData){
-          return body(categories: snapshot.data!,);
+          return body(categories: snapshot.data!);
         }
         return Scaffold(
           body: Container(

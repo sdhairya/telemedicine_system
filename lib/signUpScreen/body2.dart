@@ -1,6 +1,7 @@
 import 'package:datepicker_dropdown/datepicker_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:telemedicine_system/dataClass/dataClass.dart';
 import 'package:telemedicine_system/loginScreen/loginScreen.dart';
 
 import 'package:intl/intl.dart';
@@ -12,7 +13,7 @@ import 'body1.dart';
 
 class body2 extends StatefulWidget {
 
-  final List<String> data;
+  final createProfile data;
 
   const body2({Key? key, required this.data}) : super(key: key);
 
@@ -217,8 +218,8 @@ class _body2State extends State<body2> {
                                             FontWeight.bold, Colors.white, 22),
                                         onPressed: () {
 
-                                          widget.data.add(dateTime.toString());
-                                          widget.data.add(_passwordController.text);
+                                          widget.data.dob = dateTime.toString();
+                                          widget.data.password = _passwordController.text;
 
                                           print(widget.data);
 
@@ -286,7 +287,7 @@ class _body2State extends State<body2> {
   Widget buildDatePicker() => SizedBox(
     height: 180,
     child: CupertinoDatePicker(
-      minimumYear: 2015,
+      minimumYear: 1850,
       maximumYear: DateTime.now().year,
       initialDateTime: dateTime,
       mode: CupertinoDatePickerMode.date,

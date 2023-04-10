@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telemedicine_system/dataClass/dataClass.dart';
 
 class api {
-  String uri = 'http://192.168.1.170:5024/';
+  String uri = 'http://192.168.1.9:5024/';
 
-  Future<String> login(String phone, String password) async {
+  Future<List<String>> login(String phone, String password) async {
     String url = uri + "api/users/login";
     var res = await http.post(Uri.parse(url),
         body: json.encode({"phone": phone, "password": password}),
@@ -19,19 +19,21 @@ class api {
     print(res.statusCode);
 
     var ack = json.decode(res.body);
-    print(ack);
-
-    if (int.parse(ack.toString()) is int) {
+    var a = ack.toString().split(",");
+    print(a);
+    if (int.parse(a[1].toString()) is int) {
 
       SharedPreferences.getInstance().then(
             (prefs) {
-          prefs.setString('patient_id', ack.toString());
+          prefs.setString('patient_id', a[1].toString());
         },
       );
 
-      return ack.toString();
+      return a;
+    } else if (a[0] == "First time") {
+      return a;
     } else {
-      return "Invalid";
+      return a;
     }
   }
 
@@ -44,12 +46,25 @@ class api {
     // print(responseData);
     List<profile> profileData = [];
 
+    appointment? app;
+
+    if(responseData[0]["getappointment"]["name"] == null){
+      app = null;
+    }
+    else{
+      app=  appointment(id: responseData[0]["getappointment"]["id"], image: responseData[0]["getappointment"]["image"],gender: responseData[0]["getappointment"]["gender"], name: responseData[0]["getappointment"]["name"], date: responseData[0]["getappointment"]["date"], time: responseData[0]["getappointment"]["time"], mode: responseData[0]["getappointment"]["mode"], address: responseData[0]["getappointment"]["address"], fees: responseData[0]["getappointment"]["fees"], status: "status", link: responseData[0]["getappointment"]["link"]);
+
+    }
+
     profileData.add(profile(
         name: responseData[0]["name"],
         email: responseData[0]["email"],
         gender: responseData[0]["gender"],
         password: responseData[0]["password"],
-        image: responseData[0]["image"]));
+        image: responseData[0]["image"],
+      app: app
+    )
+    );
     // print(profileData);
     return profileData;
   }
@@ -67,6 +82,63 @@ class api {
     return d;
   }
 
+  Future<String> addUser(String otp, createProfile data) async {
+    String url = uri + "api/users";
+    var res = await http.post(Uri.parse(url),
+        body: json.encode({
+          "name":data.name,
+          "email":data.email,
+          "phone": data.phone,
+          "gender": data.gender,
+          "dob":data.dob.substring(0,10),
+          "password": data.password,
+          "otp":otp
+        }),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8'));
+
+    print(res.statusCode);
+    print(res.body);
+    return res.body;
+
+  }
+
+  Future<String> sendOtp(String phone) async {
+    print(phone);
+    var url = "api/users/send-sms?phone=" + phone;
+    var res = await http.post(Uri.parse(uri + url),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8'));
+
+    print(res.statusCode);
+    return res.body;
+  }
+
+  Future<String> forgotPassword(String phone, int otp, String password) async {
+    var url = "api/users/forgot";
+    var res = await http.put(Uri.parse(uri + url),
+        body: json.encode({
+          "phone":phone,
+          "otp":otp,
+          "password":password
+        }),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8'));
+
+    print(json.decode(res.body));
+    return json.decode(res.body);
+  }
+
+
   Future<List<doctorProfile>> getDoctorsTags(String tag) async {
     var url = "api/doctors/name?tag=" + tag;
     var res = await http.get(Uri.parse(uri + url));
@@ -75,20 +147,20 @@ class api {
     List<doctorProfile> doctor = [];
     for (var i in data) {
       doctor.add(doctorProfile(
-          id: i["id"].toString(),
+          id: i["user_id"].toString(),
           name: i["name"],
           phone: i["phone"],
           degree: i["degree"],
-          facility: i["facility"],
+          facility: i["facility_name"].toString(),
           experience: i["experience"].toString(),
           image: i["image"],
           speciality: i["speciality"],
           description: i["description"],
           otherachivement: i["otherachivement"],
-          fees: i["fees"].toString(),
-          mode: i["mode"]));
+          fees: i["fees"].toString(),));
       // doctor.add(doctorProfile(name: data[i]["name"], degree: data[i]["degree"], facility: data[i]["facility_name"], experience: data[i]["experience"].toString(), image: data[i]["image"], ));
     }
+    print(doctor);
     return doctor;
   }
 
@@ -116,7 +188,7 @@ class api {
             description: i["description"],
             otherachivement: i["otherachivement"],
             fees: i["fees"].toString(),
-            mode: i["mode"]));
+            ));
         offline.add(doctorProfile(
             id: i["id"].toString(),
             name: i["name"],
@@ -129,7 +201,7 @@ class api {
             description: i["description"],
             otherachivement: i["otherachivement"],
             fees: i["fees"].toString(),
-            mode: i["mode"]));
+           ));
       } else if (i["mode"] == "online") {
         online.add(doctorProfile(
             id: i["id"].toString(),
@@ -143,7 +215,7 @@ class api {
             description: i["description"],
             otherachivement: i["otherachivement"],
             fees: i["fees"].toString(),
-            mode: i["mode"]));
+           ));
       } else if (i["mode"] == "offline") {
         offline.add(doctorProfile(
             id: i["id"].toString(),
@@ -157,7 +229,7 @@ class api {
             description: i["description"],
             otherachivement: i["otherachivement"],
             fees: i["fees"].toString(),
-            mode: i["mode"]));
+            ));
       }
       // d.add(doctorProfile(name: i["name"], degree: i["degree"],facility: i["facility"],experience: i["experience"].toString(), image: i["image"], speciality: i["speciality"], description: i["description"], otherachivement:  i["otherachivement"], fees: i["fees"].toString(), mode: i["mode"]));
     }
@@ -274,7 +346,7 @@ class api {
     List<appointment> appointments = [];
     for (var i in data) {
       appointments.add(
-          appointment(id: i["id"].toString(),image: i["image"], name: i["name"], date: i["date"].toString(), time: i["time"].toString(), mode: i["mode"], address: i["address"], fees: int.parse(i["fees"].toString()), status: i["status"], link: i["link"])
+          appointment(id: i["id"],image: i["image"], name: i["name"], date: i["date"].toString(),gender: i["gender"], time: i["time"].toString(), mode: i["mode"], address: i["address"], fees: int.parse(i["fees"].toString()), status: i["status"], link: i["link"])
       );
     }
     print(appointments);
@@ -290,7 +362,13 @@ class api {
     List<prescription> pre = [];
     for (var i in data) {
       // getMedicines(i["medicines"]);
-      pre.add(prescription(symptoms: i["symptoms"], test: i["test"], diagnosis: i["diagnosis"], medicines: getMedicines(i["medicines"])));
+      if(i["medicines"] == null){
+        pre.add(prescription(symptoms: i["symptoms"], test: i["test"], diagnosis: i["diagnosis"], medicines: []));
+      }
+      else{
+        pre.add(prescription(symptoms: i["symptoms"], test: i["test"], diagnosis: i["diagnosis"], medicines: getMedicines(i["medicines"])));
+
+      }
       // pre[i].medicines = getMedicines(i["medicines"]);
 
     }
@@ -307,4 +385,15 @@ class api {
     return m;
 
   }
+
+  Future<List<String>> getDocData(String id) async {
+    var url = "api/doctors/drview?id=" + id;
+    var res = await http.get(Uri.parse(uri + url));
+    var response = json.decode(res.body);
+    List<String> data = [];
+    data.add(response[0]["totalpatients"].toString());
+    data.add(response[0]["review"].toString());
+    return data;
+  }
+
 }

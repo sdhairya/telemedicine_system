@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:telemedicine_system/apis/api.dart';
 import 'package:telemedicine_system/dashboardScreen/dashboardScreen.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../colors.dart';
 import '../components.dart';
@@ -23,6 +24,50 @@ class _bodyState extends State<body> {
   Signaling signaling = Signaling();
   RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
+  Razorpay _razorpay = Razorpay();
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear(); // Removes all listeners
+  }
+
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    // Do something when payment succeeds
+    print(response.orderId.toString()+"\n"+response.paymentId.toString()+"\n"+response.signature.toString());
+    print("Payment Success");
+    var roomId = await signaling.createRoom(widget.doctorData.name, widget.doctorData.phone,widget.appointment_data.consultationMode);
+    widget.appointment_data.link = roomId;
+    print(widget.appointment_data.link);
+    var res = await api().scheduleAppointment(widget.data, widget.doctorData, widget.appointment_data);
+    if(res == 200){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Appointment Applied", FontWeight.w500, Colors.white, 18),));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => dashboardScreen(id: widget.appointment_data.patient_id),));
+    }
+    else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Appointment not scheduled", FontWeight.w500, Colors.white, 18),));
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+    print("Payment Error");
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet is selected
+    print("Payment Wallet");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,18 +146,19 @@ class _bodyState extends State<body> {
             onPressed: () async {
               // print(widget.appointment_data);
 
+              var options = {
+                'key': 'rzp_test_E9IoanWYW4rL1k',
+                'amount': (int.parse(widget.appointment_data.fees) * 100).toString(), //in the smallest currency sub-unit.
+                'name': widget.data[0].name,// Generate order_id using Orders API
+                'description': 'Appointment',
+                'timeout': 300, // in seconds
+                'prefill': {
+                  'contact': '9123456789',
+                  'email': 'telemedicine@xyz.com'
+                }
+              };
+              _razorpay.open(options);
 
-             var roomId = await signaling.createRoom(widget.doctorData.name, widget.doctorData.phone,widget.appointment_data.consultationMode);
-              widget.appointment_data.link = roomId;
-             print(widget.appointment_data.link);
-             var res = await api().scheduleAppointment(widget.data, widget.doctorData, widget.appointment_data);
-             if(res == 200){
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Appointment Applied", FontWeight.w500, Colors.white, 18),));
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => dashboardScreen(id: widget.appointment_data.patient_id),));
-              }
-              else{
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Appointment not scheduled", FontWeight.w500, Colors.white, 18),));
-              }
             }
           ),
         ),

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'apis/api.dart';
+
 class components extends StatefulWidget {
   const components({Key? key}) : super(key: key);
 
@@ -23,6 +25,30 @@ class components extends StatefulWidget {
         ),
         hintText: hint,
       ),
+    );
+  }
+
+  TextField textField_prescription(String hint, TextInputType type, TextEditingController controller, String columnName, String id) {
+    return  TextField(
+      keyboardType: type,
+      controller: controller,
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15),borderSide: BorderSide(color: Color(
+            0x52003879))),
+        enabled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        hintText: hint,
+        hintStyle: TextStyle(color: Color(0xff959595)),
+      ),
+      onChanged: (value) async {
+        print(value);
+        // await api().prescribe(id, columnName, value);
+      },
+      onSubmitted: null,
     );
   }
 

@@ -12,6 +12,6 @@ class consultationModeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return body(category: category,data: data,);
+    return body(category: category,data: data);
   }
 }

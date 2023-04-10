@@ -1,8 +1,5 @@
 import 'dart:core';
 
-import 'dataClass.dart';
-import 'dataClass.dart';
-
 class profile{
 
   String name = "";
@@ -10,13 +7,35 @@ class profile{
   String gender = "";
   String password = "";
   String? image = "";
+  appointment? app = appointment(id: 0, image: "image", name: "name", date: "date", time: "time", mode: "mode", address: "address", fees: 0, status: "status", link: "link", gender: '');
 
   profile(
-      {required this.name, required this.email, required this.gender, required this.password, required this.image});
+      {required this.name, required this.email, required this.gender, required this.password, required this.image, required this.app});
 
   @override
   String toString() {
     return "$name\n$email\n$gender\n$password\n$image";
+  }
+
+}
+
+
+class createProfile{
+
+  String name = "";
+  String email = "";
+  String gender = "";
+  String password = "";
+  String dob = "";
+  String phone = "";
+
+
+  createProfile(
+      {required this.name, required this.email, required this.gender, required this.password, required this.dob, required this.phone});
+
+  @override
+  String toString() {
+    return "$name\n$email\n$gender\n$password\n$dob";
   }
 
 }
@@ -34,10 +53,9 @@ class doctorProfile{
   String experience = "";
   String image = "";
   String fees = "";
-  String mode = "";
 
   doctorProfile(
-      {required this.id, required this.name, required this.phone, required this.degree, required this.speciality, required this.facility, required this.otherachivement, required this.description,required this.experience, required this.image, required this.fees, required this.mode});
+      {required this.id, required this.name, required this.phone, required this.degree, required this.speciality, required this.facility, required this.otherachivement, required this.description,required this.experience, required this.image, required this.fees});
 
   @override
   String toString() {
@@ -102,10 +120,11 @@ class facility{
 }
 class appointment{
 
-  String id = "";
+  int id = 0;
   String image = "";
   String name = "";
   String date = "";
+  String gender = "";
   String time = "";
   String mode = "";
   String address = "";
@@ -114,7 +133,7 @@ class appointment{
   String link = "";
 
   appointment({
-    required this.id, required this.image, required this.name, required this.date, required this.time, required this.mode, required this.address, required this.fees, required this.status, required this.link
+    required this.id, required this.image, required this.name, required this.date, required this.gender, required this.time, required this.mode, required this.address, required this.fees, required this.status, required this.link
   });
 
   @override

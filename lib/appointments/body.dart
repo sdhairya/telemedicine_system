@@ -11,7 +11,9 @@ import '../dataClass/dataClass.dart';
 class body extends StatefulWidget {
 
   final List<appointment> data;
-  const body({Key? key, required this.data}) : super(key: key);
+  final profile patientProfile;
+
+  const body({Key? key, required this.data, required this.patientProfile}) : super(key: key);
 
   @override
   State<body> createState() => _bodyState();
@@ -256,7 +258,7 @@ class _bodyState extends State<body> {
                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => callScreen(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index],)));
                                             }
                                             if(widget.data[index].mode == "audio"){
-                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => audiCallScreen(roomId: widget.data[index].link, role: "client"),));
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => audiCallScreen(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index], patientProfile: widget.patientProfile ),));
                                             }
                                             // Navigator.of(context).push(MaterialPageRoute(builder: (context) => callScreen(roomId: "Ba4rv79RD5J6ACWHDHQc", role: "client"),));
 

@@ -3,13 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:telemedicine_system/apis/api.dart';
 import 'package:telemedicine_system/components.dart';
 import 'package:http/http.dart' as http;
+import 'package:telemedicine_system/dataClass/dataClass.dart';
 import 'package:telemedicine_system/signUpScreen/otpVerificationScreen.dart';
 
 class body_mobileNumber extends StatefulWidget {
 
-  final List<String> data;
+  final createProfile data;
 
   const body_mobileNumber({Key? key, required this.data}) : super(key: key);
 
@@ -104,35 +106,16 @@ class _body_mobileNumberState extends State<body_mobileNumber> {
                               child: components().text("Get Otp",
                                   FontWeight.w500, Colors.white, 22),
                               onPressed: () async {
+                                widget.data.phone = _phoneController.text;
+
                                 print(widget.data);
-                                String uri = 'http://192.168.1.170:5024/api/users';
-                                var res = await http.post(Uri.parse(uri),
-                                    body: json.encode({
-                                      "name":widget.data[0].toString(),
-                                      "email":widget.data[1].toString(),
-                                      "phone": _phoneController.text.toString(),
-                                      "gender": widget.data[2].toString(),
-                                      "dob":widget.data[3].toString().substring(0,10),
-                                      "password": widget.data[4].toString()
-                                    }),
-                                    headers: {
-                                      "Accept": "application/json",
-                                      "content-type":"application/json"
-                                    },
-                                    encoding: Encoding.getByName('utf-8'));
-                                print(res.statusCode);
-                                print(jsonDecode(res.body));
-
-                                if(json.decode(res.body) == "User Added Successfully"){
+                                await api().sendOtp(_phoneController.text);
 
 
-
-                                }
-
-                                // Navigator.of(context).pushReplacement(
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             otpVerificationScreen()));
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            otpVerificationScreen(data: widget.data,)));
                               },
                             ),
                           )

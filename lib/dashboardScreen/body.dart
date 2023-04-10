@@ -37,7 +37,7 @@ class _bodyState extends State<body> {
     return SafeArea(
       child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/images/dashboard.png"),fit:BoxFit.fill)
+              image: DecorationImage(image: AssetImage("assets/images/dashboard.png"),fit:BoxFit.fill,)
           ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -49,7 +49,6 @@ class _bodyState extends State<body> {
                 ),
                 ListTile(
                   leading: ElevatedButton(
-                    child: Icon(Icons.search, size: 30, color: Color(0xff383434)),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xfff6f6f4),
                         shape: CircleBorder(),
@@ -62,6 +61,7 @@ class _bodyState extends State<body> {
                               builder: (context) => searchScreen()));
 
                     },
+                    child: Icon(Icons.search, size: 30, color: Color(0xff383434)),
                   ),
                   trailing: Wrap(
                     children: [
@@ -175,47 +175,50 @@ class _bodyState extends State<body> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.04,
                       ),
+
                       Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.only(top: 30,left: 20,right: 20),
-                        decoration: BoxDecoration(
+                          padding: EdgeInsets.only(top: 30,left: 20,right: 20),
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(topRight: Radius.circular(60),topLeft: Radius.circular(60)),
                             color: Colors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            components().text(" Our Services", FontWeight.bold, Colors.black, 22),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  buildServicesList("Consultation", "assets/images/consultation.png", registeredSearchScreen()),
-                                  SizedBox(width: 30,),
-                                  buildServicesList("Appointments", "assets/images/medicines.jpg", appointments(id: widget.id)),
-                                  SizedBox(width: 30,),
-                                  // buildServicesList("Medicines", "assets/images/medicines.jpg", callScreen(roomId: " ",role: "role", )),
-                                  SizedBox(width: 30,),
-                                  buildServicesList("Lab Test", "assets/images/labtest.png", Container())
-                                ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              components().text(" Our Services", FontWeight.bold, Colors.black, 22),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    buildServicesList("Consultation", "assets/images/consultation.png", registeredSearchScreen()),
+                                    SizedBox(width: 30,),
+                                    buildServicesList("Appointments", "assets/images/medicines.jpg", appointments(id: widget.id, patientProfile: widget.data[0],)),
+                                    SizedBox(width: 30,),
+                                    // buildServicesList("Medicines", "assets/images/medicines.jpg", callScreen(roomId: " ",role: "role", )),
+                                    // SizedBox(width: 30,),
+                                    buildServicesList("Lab Test", "assets/images/labtest.png", Container())
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.028,
-                            ),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  components().text("My Appointments", FontWeight.bold, Colors.black, 22),
-                                  buildAppointmentList()
-                                ],
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.028,
                               ),
-                            )
+                              Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    components().text("My Appointments", FontWeight.bold, Colors.black, 22),
+                                    buildAppointmentList()
+                                  ],
+                                ),
+                              )
 
-                          ],
+                            ],
+                          ),
                         ),
-                      )
+
                     ],
                   ),
                 ),
@@ -255,87 +258,106 @@ class _bodyState extends State<body> {
 
   Widget buildAppointmentList(){
 
-    return Container(
-          // height: MediaQuery.of(context).size.height * 0.2,
-          margin: EdgeInsets.only(top: 10,bottom: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-              gradient: new LinearGradient(
-                  stops: [0.02, 0.02],
-                  colors: [Colors.blue, Color(0xfff6f6f4)]
-              ),
+    if(widget.data[0].app != null){
+      return Container(
+        // height: MediaQuery.of(context).size.height * 0.2,
+        margin: EdgeInsets.only(top: 10,bottom: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: new LinearGradient(
+              stops: [0.02, 0.02],
+              colors: [Colors.blue, Color(0xfff6f6f4)]
           ),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 10, top: 10, right: 10,bottom: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    components().text("Appointment Date", FontWeight.w400, Colors.grey, 16),
-                    Icon(Icons.more_vert, size: 32, color: Colors.grey,),
-                  ],
-                ),
-                Wrap(
-                  children: [
-                    Icon(Icons.access_time_outlined, size: 19,),
-                    components().text("Time", FontWeight.normal, Colors.black, 16),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Wrap(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.width * 0.18,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          margin: EdgeInsets.only(top: 10,bottom: 5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: 10, top: 10, right: 10,bottom: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      components().text(widget.data[0].app!.date!, FontWeight.w400, Colors.grey, 16),
+                      Icon(Icons.more_vert, size: 32, color: Colors.grey,),
+                    ],
+                  ),
+                  Wrap(
+                    children: [
+                      Icon(Icons.access_time_outlined, size: 19,),
+                      components().text(widget.data[0].app!.time!, FontWeight.normal, Colors.black, 16),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          ClipOval(
+                            child: CircleAvatar(
+                              radius: MediaQuery.of(context).size.width * 0.1,
+                              child: Image(image: NetworkImage(api().uri + widget.data[0].app!.image!)),
+                            ),
                           ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.width * 0.18,
-                          margin: EdgeInsets.only(left: 10),
-                          child:  Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              components().text("Doctor Name", FontWeight.bold, Colors.black, 16),
-                              components().text("Doctor Degree", FontWeight.normal, Colors.grey, 16),
-                            ],
-                          ),
-                        )
-                      ],
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                    ),
-                    ElevatedButton(
-                      child: components().text("Join", FontWeight.normal, Colors.white, 16),
-                      onPressed: () {
+                          Container(
+                            height: MediaQuery.of(context).size.width * 0.18,
+                            margin: EdgeInsets.only(left: 10),
+                            child:  Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                components().text(widget.data[0].app!.name!, FontWeight.bold, Colors.black, 16),
+                                components().text(widget.data[0].app!.mode!, FontWeight.normal, Colors.grey, 16),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      ElevatedButton(
+                        child: components().text("Join", FontWeight.normal, Colors.white, 16),
+                        onPressed: () {
 
-                      },
-                    ),
-                  ],
-                )
-              ],
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
+
+
+
+
+
+
+          ],
+        ),
+      );
+    }
+    return Container(
+        height: MediaQuery.of(context).size.height * 0.198,
+      width: double.infinity,
+        margin: EdgeInsets.only(top: 10,bottom: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: new LinearGradient(
+              stops: [0.02, 0.02],
+              colors: [Colors.blue, Color(0xfff6f6f4)]
           ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-
-
-
-
-
-      ],
-    ),
-        );
+            components().text("No Appointment Scheduled", FontWeight.w500, Colors.black, 20)
+          ],
+        ),
+      );
 
   }
 

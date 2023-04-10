@@ -107,7 +107,7 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
   Stream<List<prescription>> pre() async*{
     while (true) {
       await Future.delayed(Duration(milliseconds: 500));
-      List<prescription> pres = await api().getPrescription(widget.appointmentData.id);
+      List<prescription> pres = await api().getPrescription(widget.appointmentData.id.toString());
       yield pres;
     }
   }
@@ -159,7 +159,7 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      components().text(widget.appointmentData.name, FontWeight.w600, Colors.white, 24),
+                      components().text(widget.appointmentData.name!, FontWeight.w600, Colors.white, 24),
                       components().text(timerStart ? _result : "Wating" , FontWeight.w600, Colors.white, 24),
                     ],
                   ),
@@ -427,53 +427,62 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
                                                       stream: pre(),
                                                       builder: (context, snapshot) {
                                                         print(snapshot.data);
-                                                        return Scaffold(
-                                                          backgroundColor: Colors.transparent,
-                                                          body:  Container(
-                                                            width: double.infinity,
-                                                            color: const Color(0xffE7F2FB),
-                                                            child: Column(
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                components().text("Symptoms : "+snapshot.data![0].symptoms.toString(), FontWeight.w500, Colors.black, 18),
-                                                                components().text("Diagnosis : "+snapshot.data![0].diagnosis.toString(), FontWeight.w500, Colors.black, 18),
-                                                                components().text("Test : "+snapshot.data![0].test.toString(), FontWeight.w500, Colors.black, 18),
-                                                                ...snapshot.data![0].medicines!.map((e) {
-                                                                  return Container(
-                                                                    padding: EdgeInsets.all(10),
-                                                                    margin: EdgeInsets.only(bottom: 5),
-                                                                    decoration: BoxDecoration(
-                                                                      color: Colors.white,
-                                                                      borderRadius: BorderRadius.circular(10),
-                                                                    ),
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        components().text(e.name.toString(), FontWeight.w600, colors().logo_darkBlue, 18),
+                                                        if(snapshot.hasData){
+                                                          return Scaffold(
+                                                            backgroundColor: Colors.transparent,
+                                                            body:  Container(
+                                                              width: double.infinity,
+                                                              color: const Color(0xffE7F2FB),
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  components().text("Symptoms : "+snapshot.data![0].symptoms.toString(), FontWeight.w500, Colors.black, 18),
+                                                                  components().text("Diagnosis : "+snapshot.data![0].diagnosis.toString(), FontWeight.w500, Colors.black, 18),
+                                                                  components().text("Test : "+snapshot.data![0].test.toString(), FontWeight.w500, Colors.black, 18),
+                                                                  ...snapshot.data![0].medicines!.map((e) {
+                                                                    return Container(
+                                                                      padding: EdgeInsets.all(10),
+                                                                      margin: EdgeInsets.only(bottom: 5),
+                                                                      decoration: BoxDecoration(
+                                                                        color: Colors.white,
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                      ),
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          components().text(e.name.toString(), FontWeight.w600, colors().logo_darkBlue, 18),
 
-                                                                        SizedBox(height: 5,),
-                                                                        Row(
-                                                                          children: [
-                                                                            components().text("Quantity: "+e.quantity.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
-                                                                            SizedBox(width: 30,),
-                                                                            components().text("Days: "+e.duration.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 5,),
-                                                                        Wrap(
-                                                                          children: [
-                                                                            components().text(e.food.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
-                                                                            SizedBox(width: 30,),
-                                                                            components().text(e.daytime.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
-                                                                          ],
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  );
-                                                                },)
-                                                              ],
+                                                                          SizedBox(height: 5,),
+                                                                          Row(
+                                                                            children: [
+                                                                              components().text("Quantity: "+e.quantity.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
+                                                                              SizedBox(width: 30,),
+                                                                              components().text("Days: "+e.duration.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
+                                                                            ],
+                                                                          ),
+                                                                          SizedBox(height: 5,),
+                                                                          Wrap(
+                                                                            children: [
+                                                                              components().text(e.food.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
+                                                                              SizedBox(width: 30,),
+                                                                              components().text(e.daytime.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
+                                                                            ],
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    );
+                                                                  },)
+                                                                ],
+                                                              ),
                                                             ),
+                                                          );
+                                                        }
+                                                        return Scaffold(
+                                                          body: Container(
+                                                            color: Colors.transparent,
+                                                            alignment: Alignment.center,
+                                                            child: CircularProgressIndicator(),
                                                           ),
                                                         );
                                                       },

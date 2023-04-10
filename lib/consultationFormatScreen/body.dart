@@ -174,7 +174,7 @@ class _bodyState extends State<body> {
 
                         ),
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => bookSlotScreen(data: widget.data, format: "audio"),));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => bookSlotScreen(data: widget.data, format: "audio",),));
                         },
                       ),
 

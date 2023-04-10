@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telemedicine_system/apis/api.dart';
 import 'package:telemedicine_system/colors.dart';
 import 'package:telemedicine_system/confirmBookingScreen/confirmBookingScreen.dart';
+import 'package:telemedicine_system/doctorProfile/doctorProfile.dart';
 import 'package:telemedicine_system/doctorsScreen/doctorsScreen.dart';
 import 'package:telemedicine_system/cupertinoExtended.dart' as cupertino_extended;
 
@@ -17,7 +18,7 @@ class body extends StatefulWidget {
   final doctorProfile data;
   final String format;
 
-  const body({Key? key, required this.data, required this.format})
+  const body({Key? key, required this.data, required this.format,})
       : super(key: key);
 
   @override
@@ -78,8 +79,8 @@ class _bodyState extends State<body> {
                       top: MediaQuery.of(context).size.height * 0.04),
                   child: Column(
                     children: [
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
+                      Row(
+                        // crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width * 0.2,
@@ -92,28 +93,43 @@ class _bodyState extends State<body> {
                                 image:
                                     NetworkImage(api().uri + widget.data.image)),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              components().text(widget.data.name,
-                                  FontWeight.bold, Colors.black, 20),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              components().text(widget.data.degree,
-                                  FontWeight.normal, Colors.black, 18),
-                              components().text(
-                                  "Experience: " + widget.data.experience,
-                                  FontWeight.normal,
-                                  Colors.black,
-                                  18),
-                              components().text(
-                                  "Fees: " + widget.data.fees,
-                                  FontWeight.normal,
-                                  Colors.black,
-                                  18),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                components().text(widget.data.name,
+                                    FontWeight.bold, Colors.black, 20),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                components().text(widget.data.degree,
+                                    FontWeight.normal, Colors.black, 18),
+                                components().text(
+                                    "Experience: " + widget.data.experience,
+                                    FontWeight.normal,
+                                    Colors.black,
+                                    18),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    components().text("Fees: " + widget.data.fees, FontWeight.normal, Colors.black, 18),
+                                    InkWell(
+                                      child: Wrap(
+                                        children: [
+                                          Icon(Icons.remove_red_eye, color: colors().logo_lightBlue,),
+                                          components().text("View Profile", FontWeight.normal, colors().logo_lightBlue, 18),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => doctorProfie(profile: widget.data),));
+                                      },
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           )
+
                         ],
                       )
                     ],

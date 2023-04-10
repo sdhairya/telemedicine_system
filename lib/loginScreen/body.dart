@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telemedicine_system/apis/api.dart';
 import 'package:telemedicine_system/dashboardScreen/dashboardScreen.dart';
+import 'package:telemedicine_system/forgotPassword/forgotPassword.dart';
+import 'package:telemedicine_system/signUpScreen/body_mobileNumber.dart';
 import 'package:telemedicine_system/signUpScreen/signUpScreen.dart';
 import 'package:http/http.dart' as http;
 
@@ -141,8 +143,9 @@ class _bodyState extends State<body> {
                                         print(_phoneController.text);
                                         print(_passwordController.text);
 
-                                        var res = await api().profiledetails(_phoneController.text);
-                                        print(res);
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => forgotPassword(),));
+                                        // var res = await api().profiledetails(_phoneController.text);
+                                        // print(res);
                                       },
                                     ),
                                   ),
@@ -328,7 +331,7 @@ class _bodyState extends State<body> {
           prefs.setString('patient_phone', _phoneController.text);
         },
       );
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => dashboardScreen(id: res),));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => dashboardScreen(id: res[1]),));
 
       return true;
     }

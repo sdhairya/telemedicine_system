@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:telemedicine_system/doctorsScreen/body.dart';
 
 import '../apis/api.dart';
+import '../dataClass/dataClass.dart';
 
 class doctorsScreen extends StatelessWidget {
 
@@ -17,7 +18,7 @@ class doctorsScreen extends StatelessWidget {
       builder: (context, snapshot) {
         print(snapshot.data);
         if(snapshot.hasData){
-          return body(data: snapshot.data!, tab: tab,);
+          return body(data: snapshot.data!, tab: tab);
         }
         else{
           return Scaffold(

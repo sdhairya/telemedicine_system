@@ -279,7 +279,7 @@ class _bodyState extends State<body> {
                                                 gender: gender.toString(),
                                                 password:
                                                 _passwordController.text,
-                                                image: imgPath),
+                                                image: imgPath, app: null),
                                             widget.id,);
                                       },
                                       child: components().text("Update",
