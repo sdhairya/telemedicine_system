@@ -14,6 +14,7 @@ class appointments extends StatelessWidget {
     return FutureBuilder(
       future: api().getAppointments(id),
       builder: (context, snapshot) {
+        print(snapshot.data);
         if(snapshot.hasData){
           return body(data: snapshot.data!, patientProfile:  patientProfile,);
         }

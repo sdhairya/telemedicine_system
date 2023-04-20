@@ -87,9 +87,9 @@ class appointmentSlots{
   List<String> morningSlots = [];
   List<String> afternoonSlots = [];
   List<String> eveningSlots = [];
-  facility morningFacility = facility(id: 0, name: "name", address: "address", phone: "phone");
-  facility afternoonFacility = facility(id: 0, name: "name", address: "address", phone: "phone");
-  facility eveningFacility = facility(id: 0, name: "name", address: "address", phone: "phone");
+  facility morningFacility = facility(id: 0, name: "name", address: "address", phone: "phone", email: "email");
+  facility afternoonFacility = facility(id: 0, name: "name", address: "address", phone: "phone", email: "email");
+  facility eveningFacility = facility(id: 0, name: "name", address: "address", phone: "phone", email: "email");
 
 
   appointmentSlots(
@@ -108,13 +108,14 @@ class facility{
   String name = "";
   String address = "";
   String phone = "";
+  String email = "";
 
   facility(
-      {required this.id, required this.name, required this.address, required this.phone});
+      {required this.id, required this.name, required this.address, required this.phone, required this.email});
 
   @override
   String toString() {
-    return "$id\n$name\n$address\n$phone";
+    return "$id\n$name\n$address\n$phone\n$email";
   }
 
 }

@@ -162,7 +162,7 @@ class _otpVerificationScreenState extends State<otpVerificationScreen> {
                                 print(value);
                                 var result = await api().addUser(value, widget.data);
 
-                                if(result == "otp is invalid"){
+                                if(result == '"otp is invalid"'){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Please enter valid OTP", FontWeight.w500, Colors.white, 18),));
                                 }
                                 else{

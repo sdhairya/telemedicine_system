@@ -281,7 +281,7 @@ class _bodyState extends State<body> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      components().text(widget.data[0].app!.date!, FontWeight.w400, Colors.grey, 16),
+                      components().text(widget.data[0].app!.date.substring(0,10), FontWeight.w400, Colors.grey, 16),
                       Icon(Icons.more_vert, size: 32, color: Colors.grey,),
                     ],
                   ),

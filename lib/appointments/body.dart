@@ -22,7 +22,6 @@ class body extends StatefulWidget {
 class _bodyState extends State<body> {
   @override
   Widget build(BuildContext context) {
-    String assetURL = "http://192.168.1.9:5024/";
 
     return SafeArea(
       child: Scaffold(
@@ -125,7 +124,7 @@ class _bodyState extends State<body> {
                                                     Icon(Icons.person,color: Color(0xff383434),size: 30):
                                                     ClipOval(
                                                         child: Image.network(
-                                                          api().uri + widget.data[0].image!,
+                                                          api().uri + widget.data[index].image!,
                                                           fit: BoxFit.fill,
                                                           height: double.maxFinite,
                                                           width: double.maxFinite,
@@ -199,7 +198,7 @@ class _bodyState extends State<body> {
                                             children: [
                                               const Icon(Icons.access_time_filled, color: Color(0xff474747), size: 15),
                                               const SizedBox(width: 5,),
-                                              const components().text(widget.data[index].date, FontWeight.normal, Color(0xff474747), 14),
+                                              const components().text(widget.data[index].date.substring(0,10), FontWeight.normal, Color(0xff474747), 14),
                                               const SizedBox(width: 10,),
                                               const components().text(widget.data[index].time, FontWeight.normal, Color(0xff474747), 14)
                                             ],
@@ -221,7 +220,7 @@ class _bodyState extends State<body> {
                                                     Icon(Icons.person,color: Color(0xff383434),size: 30):
                                                     ClipOval(
                                                         child: Image.network(
-                                                          api().uri + widget.data[0].image!,
+                                                          api().uri + widget.data[index].image!,
                                                           fit: BoxFit.fill,
                                                           height: double.maxFinite,
                                                           width: double.maxFinite,

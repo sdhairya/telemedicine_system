@@ -5,12 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telemedicine_system/dataClass/dataClass.dart';
 
 class api {
-  String uri = 'http://192.168.1.9:5024/';
+  String uri = 'http://192.168.1.58:5024/';
 
   Future<List<String>> login(String phone, String password) async {
     String url = uri + "api/users/login";
     var res = await http.post(Uri.parse(url),
-        body: json.encode({"phone": phone, "password": password}),
+        body: json.encode({
+          "phone": phone,
+          "password": password,
+          "role": "Patient",
+        }),
         headers: {
           "Accept": "application/json",
           "content-type": "application/json"
@@ -102,7 +106,7 @@ class api {
 
     print(res.statusCode);
     print(res.body);
-    return res.body;
+    return res.body.toString();
 
   }
 
@@ -275,36 +279,46 @@ class api {
   }
 
   Future<List<appointmentSlots>> getSlots(String id, String day, String mode) async {
+    print(day);
     var url =
-        "api/scheduler/slots?id=" + id + "&day=" + day + "&mode=" + mode;
+        "api/schedule/patientside?id=" + id + "&day=" + day + "&mode=" + mode;
     var res = await http.get(Uri.parse(uri + url));
     var data = json.decode(res.body);
-    print(data);
+    // print(data);
     List<appointmentSlots> d = [];
-
-    print(data[0]["afternoonFacility"]["name"].toString());
+    // json.decode(a).cast<String>().toList()
+    // print(data[0]["morningFacility"]["id"].toString());
     d.add(appointmentSlots(
-      morningSlots: data[0]["morning"].toString().split(","),
-      afternoonSlots: data[0]["afternoon"].toString().split(","),
-      eveningSlots: data[0]["evening"].toString().split(","),
+      morningSlots: data[0]["morning"].toString() == "" ? [""]: json.decode(data[0]["morning"].toString()).cast<String>().toList(),
+      afternoonSlots: data[0]["afternoon"].toString()== "" ? [""]: json.decode(data[0]["afternoon"].toString()).cast<String>().toList(),
+      eveningSlots: data[0]["evening"].toString()== "" ? [""]: json.decode(data[0]["evening"].toString()).cast<String>().toList(),
       // morningFacility: facility(id: 0, name: "name", address: "address", phone: "phone"),
       // afternoonFacility: facility(id: 0, name: "name", address: "address", phone: "phone"),
       // eveningFacility: facility(id: 0, name: "name", address: "address", phone: "phone")
-      morningFacility: facility(
+      morningFacility: data[0]["morningFacility"]["id"].toString() == "null"
+          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          : facility(
           id: int.parse(data[0]["morningFacility"]["id"].toString()),
           name: data[0]["morningFacility"]["name"].toString(),
           address: data[0]["morningFacility"]["address"].toString(),
-          phone: data[0]["morningFacility"]["phone"].toString()),
-      afternoonFacility: facility(
+          phone: data[0]["morningFacility"]["phone"].toString(),
+      email: data[0]["morningFacility"]["email"]),
+      afternoonFacility: data[0]["afternoonFacility"]["id"].toString() == "null"
+          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          : facility(
           id: int.parse(data[0]["afternoonFacility"]["id"].toString()),
           name: data[0]["afternoonFacility"]["name"].toString(),
           address: data[0]["afternoonFacility"]["address"].toString(),
-          phone: data[0]["afternoonFacility"]["phone"].toString()),
-      eveningFacility: facility(
+          phone: data[0]["afternoonFacility"]["phone"].toString(),
+          email: data[0]["afternoonFacility"]["email"]),
+      eveningFacility: data[0]["eveningFacility"]["id"].toString() == "null"
+          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          : facility(
           id: int.parse(data[0]["eveningFacility"]["id"].toString()),
           name: data[0]["eveningFacility"]["name"].toString(),
           address: data[0]["eveningFacility"]["address"].toString(),
-          phone: data[0]["eveningFacility"]["phone"].toString()),
+          phone: data[0]["eveningFacility"]["phone"].toString(),
+          email: data[0]["eveningFacility"]["email"]),
     ));
 
     // print(d);
@@ -358,7 +372,7 @@ class api {
     var url = "api/prescription/byid?id=" + id;
     var res = await http.get(Uri.parse(uri + url));
     var data = json.decode(res.body);
-    // print(data);
+    print(data);
     List<prescription> pre = [];
     for (var i in data) {
       // getMedicines(i["medicines"]);

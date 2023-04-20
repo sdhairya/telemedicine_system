@@ -29,11 +29,11 @@ class _bodyState extends State<body> {
   DateTime now = DateTime.now();
   late DateTime lastDayOfMonth;
   int selectedIndex = 0;
-  int selIndex = 0;
+  int selIndex = 9999;
   var daytime = "morning";
   bool bookSlot = false;
   List<String> times = ["morning", "afternoon", "evening"];
-  var day = "Monday";
+  var day = DateFormat('EEEE').format(DateTime.now());
   late DateTime _selectedDate;
   String selectedSlot = "";
   List<String> facility_name = [" "," "," "];
