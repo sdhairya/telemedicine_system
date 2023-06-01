@@ -138,7 +138,7 @@ class _bodyState extends State<body> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.03,
                 ),
-                buildFormatCard(widget.format),
+                buildFormatCard(widget.format, ""),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.03,
                 ),
@@ -249,6 +249,7 @@ class _bodyState extends State<body> {
                         facility_name[2] = snapshot.data![0].eveningFacility.name;
                         if(daytime == "morning"){
                           facility_id = snapshot.data![0].morningFacility.id;
+                          buildFormatCard(widget.format, snapshot.data![0].morningFacility.name);
                           return timeSlots(snapshot.data![0].morningSlots,);
                         }
                         if(daytime == "afternoon"){
@@ -298,6 +299,7 @@ class _bodyState extends State<body> {
 
   Widget timeSlots(List<String> slot){
 
+
     return slot.length == 1 ? Text("No Slots available") : Wrap(
       children: slot.map((e) {
         return InkWell(
@@ -331,7 +333,7 @@ class _bodyState extends State<body> {
     );
   }
 
-  Widget buildFormatCard(String format) {
+  Widget buildFormatCard(String format, String fName) {
     var f;
     if(daytime == "morning" ){
       f = facility_name[0];

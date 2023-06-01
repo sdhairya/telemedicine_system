@@ -92,6 +92,7 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
         _remoteRenderer,
         "Video"
       );
+      // await api().doctorAck(widget.appointmentData.id.toString());
       print("=======================");
       setState(() {});
     } else if (widget.role == "client") {
@@ -99,6 +100,7 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
         widget.roomId,
         _remoteRenderer,
       );
+      // await api().patientAck(widget.appointmentData.id.toString());
     }
 
     return "Success";
@@ -132,7 +134,7 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
     //   widget.roomId,
     //   _remoteRenderer,
     // );
-    print(_remoteRenderer.value);
+    // print(_remoteRenderer.value);
     final dragController = DragController();
     return SafeArea(
         child: Scaffold(
@@ -277,151 +279,23 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
                                                 child: TabBarView(
                                                   controller: _tabController,
                                                   children: [
-                                                    SingleChildScrollView(
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Container(
-                                                            decoration: UnderlineTabIndicator(borderSide: BorderSide(color: colors().logo_darkBlue), insets: const EdgeInsets.only(left: 0, right: -10)),
-                                                            child:  Wrap(
-                                                              crossAxisAlignment: WrapCrossAlignment.center,
-                                                              children: [
-                                                                Icon(Icons.access_time_outlined, color: colors().logo_darkBlue, size: 15),
-                                                                const SizedBox(width: 5,),
-                                                                const components().text("13-03-2023", FontWeight.w500, colors().logo_darkBlue, 17),
-                                                                const SizedBox(width: 10,),
-                                                                const components().text("1:00", FontWeight.w500, colors().logo_darkBlue, 17)
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Symptoms", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Normal Headache", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Diagnosis", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Viral", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Medicines", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Paracetamol 250mg * Tablet", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("When to take", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("After lunch", FontWeight.w600, Colors.black, 16)
-                                                                ],
-                                                              ),
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Test", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Not needed", FontWeight.w600, Colors.black, 16),
-
-                                                                ],
-                                                              )
-                                                            ],
-                                                          ),
-                                                          const SizedBox(height: 10,),
-                                                          const Divider(),
-                                                          Container(
-                                                            decoration: UnderlineTabIndicator(borderSide: BorderSide(color: colors().logo_darkBlue), insets: const EdgeInsets.only(left: 0, right: -10)),
-                                                            child:  Wrap(
-                                                              crossAxisAlignment: WrapCrossAlignment.center,
-                                                              children: [
-                                                                Icon(Icons.access_time_outlined, color: colors().logo_darkBlue, size: 15),
-                                                                const SizedBox(width: 5,),
-                                                                const components().text("13-03-2023", FontWeight.w500, colors().logo_darkBlue, 17),
-                                                                const SizedBox(width: 10,),
-                                                                const components().text("1:00", FontWeight.w500, colors().logo_darkBlue, 17)
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Symptoms", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Normal Headache", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Diagnosis", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Viral", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Medicines", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Paracetamol 250mg * Tablet", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("When to take", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("After lunch", FontWeight.w600, Colors.black, 16)
-                                                                ],
-                                                              ),
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Test", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Not needed", FontWeight.w600, Colors.black, 16),
-
-                                                                ],
-                                                              )
-                                                            ],
-                                                          ),
-                                                          const SizedBox(height: 10,),
-                                                          const Divider(),
-                                                          Container(
-                                                            decoration: UnderlineTabIndicator(borderSide: BorderSide(color: colors().logo_darkBlue), insets: const EdgeInsets.only(left: 0, right: -10)),
-                                                            child:  Wrap(
-                                                              crossAxisAlignment: WrapCrossAlignment.center,
-                                                              children: [
-                                                                Icon(Icons.access_time_outlined, color: colors().logo_darkBlue, size: 15),
-                                                                const SizedBox(width: 5,),
-                                                                const components().text("13-03-2023", FontWeight.w500, colors().logo_darkBlue, 17),
-                                                                const SizedBox(width: 10,),
-                                                                const components().text("1:00", FontWeight.w500, colors().logo_darkBlue, 17)
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Symptoms", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Normal Headache", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Diagnosis", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Viral", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Medicines", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Paracetamol 250mg * Tablet", FontWeight.w600, Colors.black, 16),
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("When to take", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("After lunch", FontWeight.w600, Colors.black, 16)
-                                                                ],
-                                                              ),
-                                                              Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  const SizedBox(height: 10,),
-                                                                  const components().text("Test", FontWeight.normal, Color(0xff7E7878), 16),
-                                                                  const components().text("Not needed", FontWeight.w600, Colors.black, 16),
-
-                                                                ],
-                                                              )
-                                                            ],
-                                                          ),
-                                                          const SizedBox(height: 10,),
-                                                          const Divider()
-                                                        ],
-                                                      ),
+                                                    FutureBuilder(
+                                                      future: api().getHistory(widget.appointmentData.id.toString()),
+                                                      builder: (context, snapshot) {
+                                                        print(snapshot.data);
+                                                        if(snapshot.hasData){
+                                                          return ListView.separated(
+                                                            itemCount: snapshot.data!.length,
+                                                            itemBuilder: (context, index) {
+                                                              return buildHistory(snapshot.data![index]);
+                                                            },
+                                                            separatorBuilder: (context, index) {
+                                                              return const Divider();
+                                                            },
+                                                          );
+                                                        }
+                                                        return CircularProgressIndicator();
+                                                      },
                                                     ),
                                                     StreamBuilder(
                                                       stream: pre(),
@@ -545,4 +419,95 @@ class _callScreenState extends State<callScreen> with SingleTickerProviderStateM
       ),
     ));
   }
+
+  Widget buildHistory(history h){
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: UnderlineTabIndicator(borderSide: BorderSide(color: colors().logo_darkBlue), insets: const EdgeInsets.only(left: 0, right: -10)),
+            child:  Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Icon(Icons.access_time_outlined, color: colors().logo_darkBlue, size: 15),
+                const SizedBox(width: 5,),
+                const components().text(h.date.toString(), FontWeight.w500, colors().logo_darkBlue, 17),
+                const SizedBox(width: 10,),
+                const components().text(h.time.toString(), FontWeight.w500, colors().logo_darkBlue, 17)
+              ],
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10,),
+                  const components().text("Symptoms", FontWeight.normal, Color(0xff7E7878), 16),
+                  const components().text(h.symptoms.toString(), FontWeight.w600, Colors.black, 16),
+                  const SizedBox(height: 10,),
+                  const components().text("Diagnosis", FontWeight.normal, Color(0xff7E7878), 16),
+                  const components().text(h.diagnosis.toString(), FontWeight.w600, Colors.black, 16),
+                  const SizedBox(height: 10,),
+                  const components().text("Medicines", FontWeight.normal, Color(0xff7E7878), 16),
+                  ...h.medicines!.map((e) {
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.only(bottom: 5),
+                      decoration: BoxDecoration(
+                        // color: Colors.white,
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          components().text(e.name.toString(), FontWeight.w600, colors().logo_darkBlue, 18),
+
+                          SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              components().text("Quantity: "+e.quantity.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
+                              SizedBox(width: 30,),
+                              components().text("Days: "+e.duration.toString(), FontWeight.normal, colors().logo_darkBlue, 16),
+                            ],
+                          ),
+                          SizedBox(height: 5,),
+                          Wrap(
+                            children: [
+                              components().text(e.food.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
+                              SizedBox(width: 30,),
+                              components().text(e.daytime.join(" "), FontWeight.w500, colors().logo_darkBlue, 16),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },)
+                  // const components().text(h.medicines.toString(), FontWeight.w600, Colors.black, 16),
+                  // const SizedBox(height: 10,),
+                  // const components().text("When to take", FontWeight.normal, Color(0xff7E7878), 16),
+                  // const components().text("After lunch", FontWeight.w600, Colors.black, 16)
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10,),
+                  const components().text("Test", FontWeight.normal, Color(0xff7E7878), 16),
+                  const components().text(h.test.toString(), FontWeight.w600, Colors.black, 16),
+
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
 }

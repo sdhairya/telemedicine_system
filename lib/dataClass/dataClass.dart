@@ -205,3 +205,48 @@ class prescription{
 
 }
 
+class history{
+
+  String? time = "";
+  String? date = "";
+  String? symptoms = "";
+  String? fees = "";
+  String? encounter_id = "";
+  String? test = "";
+  String? diagnosis = "";
+  List<medicine>? medicines = [];
+
+  history(
+      {required this.time, required this.date,required this.symptoms, required this.test, required this.diagnosis, required this.medicines});
+
+  @override
+  String toString() {
+    return "$time\n$date\n$symptoms\n$test\n$diagnosis\n$medicines";
+  }
+
+}
+
+class appointmentHistory{
+
+  String? time = "";
+  String? date = "";
+  String? fees = "";
+  String? encounter_id = "";
+  prescription? pres = null;
+  doctorProfile doctor = doctorProfile(id: "id", name: "name", phone: "phone", degree: "degree", speciality: "speciality", facility: "facility", otherachivement: "otherachivement", description: "description", experience: "experience", image: "image", fees: "fees");
+  String consultationMode = "";
+  String medium = "";
+
+
+
+
+  appointmentHistory(
+      {required this.time, required this.date,required this.pres, required this.fees, required this.medium, required this.doctor, required this.consultationMode, required this.encounter_id});
+
+  @override
+  String toString() {
+    return "$time\n$date\n$fees\n$encounter_id\n$pres\n$doctor\n$consultationMode\n$medium";
+  }
+
+}
+

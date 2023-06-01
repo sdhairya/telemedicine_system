@@ -49,9 +49,10 @@ class _bodyState extends State<body> {
     var roomId = await signaling.createRoom(widget.doctorData.name, widget.doctorData.phone,widget.appointment_data.consultationMode);
     widget.appointment_data.link = roomId;
     print(widget.appointment_data.link);
-    var res = await api().scheduleAppointment(widget.data, widget.doctorData, widget.appointment_data);
+    var res = await api().scheduleAppointment(widget.data, widget.doctorData, widget.appointment_data, response.paymentId.toString(), "Pending");
     if(res == 200){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: components().text("Appointment Applied", FontWeight.w500, Colors.white, 18),));
+      // await api().payment(widget.appointment_data.id, status, payment_id)
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => dashboardScreen(id: widget.appointment_data.patient_id),));
     }
     else{
@@ -59,8 +60,9 @@ class _bodyState extends State<body> {
     }
   }
 
-  void _handlePaymentError(PaymentFailureResponse response) {
+  Future<void> _handlePaymentError(PaymentFailureResponse response) async {
     // Do something when payment fails
+    await api().scheduleAppointment(widget.data, widget.doctorData, widget.appointment_data, "", "Payment Failed");
     print("Payment Error");
   }
 
@@ -68,6 +70,8 @@ class _bodyState extends State<body> {
     // Do something when an external wallet is selected
     print("Payment Wallet");
   }
+
+
 
   @override
   Widget build(BuildContext context) {

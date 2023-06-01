@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telemedicine_system/dataClass/dataClass.dart';
 
 class api {
-  String uri = 'http://192.168.1.58:5024/';
+  String uri = 'http://172.20.10.10:5024/';
 
   Future<List<String>> login(String phone, String password) async {
     String url = uri + "api/users/login";
@@ -141,7 +141,6 @@ class api {
     print(json.decode(res.body));
     return json.decode(res.body);
   }
-
 
   Future<List<doctorProfile>> getDoctorsTags(String tag) async {
     var url = "api/doctors/name?tag=" + tag;
@@ -296,7 +295,7 @@ class api {
       // afternoonFacility: facility(id: 0, name: "name", address: "address", phone: "phone"),
       // eveningFacility: facility(id: 0, name: "name", address: "address", phone: "phone")
       morningFacility: data[0]["morningFacility"]["id"].toString() == "null"
-          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          ? facility(id: 0, name: "Not Available", address: "address", phone: "phone", email: "email")
           : facility(
           id: int.parse(data[0]["morningFacility"]["id"].toString()),
           name: data[0]["morningFacility"]["name"].toString(),
@@ -304,7 +303,7 @@ class api {
           phone: data[0]["morningFacility"]["phone"].toString(),
       email: data[0]["morningFacility"]["email"]),
       afternoonFacility: data[0]["afternoonFacility"]["id"].toString() == "null"
-          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          ? facility(id: 0, name: "Not Available", address: "address", phone: "phone", email: "email")
           : facility(
           id: int.parse(data[0]["afternoonFacility"]["id"].toString()),
           name: data[0]["afternoonFacility"]["name"].toString(),
@@ -312,7 +311,7 @@ class api {
           phone: data[0]["afternoonFacility"]["phone"].toString(),
           email: data[0]["afternoonFacility"]["email"]),
       eveningFacility: data[0]["eveningFacility"]["id"].toString() == "null"
-          ? facility(id: 0, name: "name", address: "address", phone: "phone", email: "email")
+          ? facility(id: 0, name: "Not Available", address: "address", phone: "phone", email: "email")
           : facility(
           id: int.parse(data[0]["eveningFacility"]["id"].toString()),
           name: data[0]["eveningFacility"]["name"].toString(),
@@ -325,7 +324,7 @@ class api {
     return d;
   }
 
-  Future<int> scheduleAppointment(List<profile> data, doctorProfile doctorData, appointmentData appointment_data) async {
+  Future<int> scheduleAppointment(List<profile> data, doctorProfile doctorData, appointmentData appointment_data, String payment_id, String status) async {
     var url = "api/Appointment?id=" +
         appointment_data.patient_id +
         "&drid=" +
@@ -339,7 +338,8 @@ class api {
           "time": appointment_data.time,
           "fees": appointment_data.fees,
           "link": appointment_data.link,
-          "status": "Pending"
+          "payment_id": payment_id,
+          "status": status
         }),
         headers: {
           "Accept": "application/json",
@@ -390,6 +390,27 @@ class api {
     return pre;
   }
 
+  Future<List<history>> getHistory(String id) async {
+    // print(id);
+    var url = "api/prescription/history?id=" + id;
+    var res = await http.get(Uri.parse(uri + url));
+    var data = json.decode(res.body);
+    print(data);
+    List<history> his = [];
+    for (var i in data) {
+     his.add(history(
+         time: i["time"].toString().isEmpty ? "No Data" : i["time"].toString(),
+         date: i["date"].toString().isEmpty ? "No Data" : i["date"].toString(),
+         symptoms: i["symptoms"].toString().isEmpty ? "No Data" : i["symptoms"].toString(),
+         test: i["test"].toString().isEmpty ? "No Data" : i["test"].toString(),
+         diagnosis: i["diagnosis"].toString().isEmpty ? "No Data" : i["diagnosis"].toString(),
+         medicines: i["medicines"] == null ? [medicine(name: "name", quantity: 0, duration: 0, food: [""], daytime: [""])] : getMedicines(i["medicines"])
+     ));
+    }
+    print(his);
+    return his;
+  }
+
   List<medicine> getMedicines(data) {
 
     List<medicine> m = [];
@@ -408,6 +429,103 @@ class api {
     data.add(response[0]["totalpatients"].toString());
     data.add(response[0]["review"].toString());
     return data;
+  }
+
+  Future<String> doctorAck(String id) async {
+    String url = uri + "api/users/acknowledgement";
+    var res = await http.post(Uri.parse(url),
+        body: json.encode({
+          "appointment_id":id,
+          "doctor": "Joined"
+        }),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8'));
+
+    print(res.statusCode);
+    print(res.body);
+    return res.body.toString();
+
+  }
+
+  Future<String> patientAck(String id) async {
+    var url = uri + "api/users/acknowledgement?id=" + id;
+    var request = await http.put(Uri.parse(url),
+      body: json.encode({
+        "patient": "Joined"
+      }),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8')
+    );
+    
+
+    print(request.body);
+    // print(response.body);
+    return json.decode(request.body);
+  }
+
+  Future<String> payment(String appointment_id, String status, String payment_id) async {
+    String url = uri + "api/payment";
+    var res = await http.post(Uri.parse(url),
+        body: json.encode({
+          "appointment_id": appointment_id,
+          "status": status,
+          "payment_id": payment_id
+        }),
+        headers: {
+          "Accept": "application/json",
+          "content-type":"application/json"
+        },
+        encoding: Encoding.getByName('utf-8'));
+
+    print(res.statusCode);
+    print(res.body);
+    return res.body.toString();
+
+  }
+
+  Future<List<appointmentHistory>> getAppointmentsHistory(String id) async {
+    var url = "api/appointment/completedappointment?ptid=" + id;
+    var res = await http.get(Uri.parse(uri + url));
+    var data = json.decode(res.body);
+    print(data);
+    List<appointmentHistory> appointments = [];
+    for (var i in data) {
+      print(i["prescription"]["symptoms"]);
+      appointments.add(
+        appointmentHistory(
+            time: i["time"],
+            date: i["date"],
+            pres: prescription(
+                symptoms: i["prescription"]["symptoms"],
+                test: i["prescription"]["test"],
+                diagnosis: i["prescription"]["diagnosis"],
+                medicines: i["prescription"]["medicines"] == null ? [medicine(name: "name", quantity: 0, duration: 0, food: [""], daytime: [""])] : getMedicines(i["prescription"]["medicines"])),
+            fees: i["fees"].toString(),
+            medium: i["consultation"]["medium"],
+            doctor: doctorProfile(
+                id: "",
+                name: i["doctor"]["name"],
+                phone: i["doctor"]["phone"],
+                degree: i["doctor"]["degree"],
+                speciality: i["doctor"]["speciality"],
+                facility: i["facilities"],
+                otherachivement: i["doctor"]["otherachivement"],
+                description: i["doctor"]["description"],
+                experience: i["doctor"]["experience"].toString(),
+                image: i["doctor"]["image"],
+                fees: i["fees"].toString()),
+            consultationMode: i["consultation"]["c_mode"],
+            encounter_id: i["encounter_id"])
+      );
+    }
+    print(appointments);
+    return appointments;
   }
 
 }

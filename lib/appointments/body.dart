@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:telemedicine_system/apis/api.dart';
 import 'package:telemedicine_system/videoCallScreen.dart';
 
-import '../audioCallScreen.dart';
+import '../audioCall/audioCall.dart';
+import '../audioCall/audioCallScreen.dart';
 import '../colors.dart';
 import '../components.dart';
 import '../dataClass/dataClass.dart';
+import '../videoCall/videoCall.dart';
 
 class body extends StatefulWidget {
 
@@ -254,10 +256,10 @@ class _bodyState extends State<body> {
                                           ),
                                           onTap: () {
                                             if( widget.data[index].mode == "video"){
-                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => callScreen(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index],)));
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => videoCall(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index],)));
                                             }
                                             if(widget.data[index].mode == "audio"){
-                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => audiCallScreen(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index], patientProfile: widget.patientProfile ),));
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => audioCall(roomId: widget.data[index].link, role: "client", appointmentData: widget.data[index], patientProfile: widget.patientProfile ),));
                                             }
                                             // Navigator.of(context).push(MaterialPageRoute(builder: (context) => callScreen(roomId: "Ba4rv79RD5J6ACWHDHQc", role: "client"),));
 

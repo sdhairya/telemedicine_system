@@ -319,7 +319,7 @@ class _bodyState extends State<body> {
     var res = await api().login(phone, password);
     print(res);
 
-    if(res == "Invalid"){
+    if(res[0] == "Invalid"){
       return false;
 
 

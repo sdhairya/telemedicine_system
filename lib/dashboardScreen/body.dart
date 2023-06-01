@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:telemedicine_system/appointmentHistory/appointmentHistory.dart' as app;
 import 'package:telemedicine_system/appointments/appointments.dart';
 import 'package:telemedicine_system/components.dart';
 import 'package:telemedicine_system/loginScreen/loginScreen.dart';
@@ -197,7 +198,7 @@ class _bodyState extends State<body> {
                                     SizedBox(width: 30,),
                                     // buildServicesList("Medicines", "assets/images/medicines.jpg", callScreen(roomId: " ",role: "role", )),
                                     // SizedBox(width: 30,),
-                                    buildServicesList("Lab Test", "assets/images/labtest.png", Container())
+                                    buildServicesList("History", "assets/images/labtest.png", app.appointmentHistory(id: widget.id,))
                                   ],
                                 ),
                               ),
